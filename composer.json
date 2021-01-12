@@ -1,0 +1,17 @@
+{
+  "name": "creativestyle/magesuite-quick-reorder",
+  "description": "This module makes making reorders easier via reorder banner, recently bought products carousel, etc.",
+  "type": "magento2-module",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "MageSuite\\QuickReorder\\": ""
+    }
+  }
+}

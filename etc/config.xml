@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <quick_reorder>
+            <latest_products_purchased>
+                <enable_latest_products_purchased_slider>0</enable_latest_products_purchased_slider>
+                <product_count>8</product_count>
+            </latest_products_purchased>
+        </quick_reorder>
+    </default>
+</config>

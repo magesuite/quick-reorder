@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="quick_reorder" translate="label" type="text" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Quick Reorder</label>
+            <tab>magesuite</tab>
+            <resource>MageSuite_QuickReorder::configuration</resource>
+            <group id="latest_products_purchased" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Latest Products Purchased</label>
+                <field id="enable_latest_products_purchased_slider" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Show Latest Products Purchased in Customer Area</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>When enabled latest products purchased will be shown in customer area.</comment>
+                </field>
+                <field id="product_count" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Product count</label>
+                    <comment>Number of products to display in slider. When set to 0 it will display all products that were ever bought by customer.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -70,19 +70,13 @@ class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\Lates
         }
         if ($this->products === null) {
             $orderItems = $this->getCustomerLatestOrderItems();
-            $this->products = $this->getLatestProductsOrderedByCurrentCustomer($orderItems);
+            $this->products = $this->getSortedProductsFromOrderItems($orderItems);
         }
         return $this->products;
     }
 
     public function renderProductTile($product) {
         return $this->productTileRenderer->render($product, null, 'grid');
-    }
-
-    protected function getLatestProductsOrderedByCurrentCustomer($orderItems)
-    {
-        $products = $this->getSortedProductsFromOrderItems($orderItems);
-        return $products;
     }
 
     protected function getCustomerLatestOrderItems()

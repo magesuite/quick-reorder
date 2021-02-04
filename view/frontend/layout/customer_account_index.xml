@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <referenceContainer name="main.content">
         <referenceContainer name="page.main.container.inner">
-            <block class="LatestProductsPurchased" name="customer.latest.products.purchased">
+            <block class="Creativestyle\QuickReorder\Block\LatestProductsPurchased" name="customer.latest.products.purchased">
                 <action method="setTemplate">
                     <argument name="template" xsi:type="string">MageSuite_QuickReorder::latest-products-purchased.phtml</argument>
                 </action>

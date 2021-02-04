@@ -1,16 +1,9 @@
 <?php
-/** @var $block \MageSuite\ContentConstructorFrontend\Block\Component\ProductCarousel */
 /** @var \MageSuite\QuickReorder\ViewModel\LatestProductsPurchased $viewModel */
 $viewModel = $block->getViewModel();
 ?>
 <?php if ($viewModel->isEnabled() && ($products = $viewModel->getProducts())): ?>
     <?php
-    $navIconNextPath = $block->getVar('product_carousel/navigation/arrows/next/path');
-    $componentClasses = $block->getSkipSpacing() ? ' cs-products-carousel--skip-spacing' : '';
-    $componentClasses .= ' ' . $block->getVar('product_carousel/additional_css_classes');
-    $viewMode = $block->getData('view_mode') ?? 'grid';
-    $isList = $viewMode == 'list' ? true : false;
-    $isSliderMobile = $block->getData('carousel_on_mobile');
     $jsSettings = json_encode($block->getVar('product_carousel/js') ?: '{}');
     ?>
     <?= $block->getCssOnce('css/products-carousel.css'); ?>
@@ -25,7 +18,7 @@ $viewModel = $block->getViewModel();
                             <?php foreach ($products as $product): ?>
                                 <li class="cs-products-carousel__slide">
                                     <div class="cs-products-carousel__product-tile">
-                                        <?= $viewModel->renderProductTile($product, null) ?>
+                                        <?= $viewModel->renderProductTile($product) ?>
                                     </div>
                                 </li>
                             <?php endforeach; ?>

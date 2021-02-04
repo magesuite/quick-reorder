@@ -4,6 +4,7 @@
         <quick_reorder>
             <latest_products_purchased>
                 <enable_latest_products_purchased_slider>0</enable_latest_products_purchased_slider>
+                <order_status>pending,pending_payment,processing,complete</order_status>
                 <product_count>8</product_count>
             </latest_products_purchased>
         </quick_reorder>

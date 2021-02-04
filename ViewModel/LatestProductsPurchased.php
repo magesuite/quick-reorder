@@ -1,13 +1,18 @@
 <?php
 namespace MageSuite\QuickReorder\ViewModel;
 
-class LatestProductsPurchased extends \MageSuite\ContentConstructorFrontend\Model\Component\ProductCarousel
+class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\LatestProductsPurchasedInterface
 {
     const SALES_ORDER_TABLE = 'sales_order';
     const SALES_ORDER_ITEM_TABLE = 'sales_order_item';
 
     /**
-     * \MageSuite\QuickReorder\Helper\Configuration
+     * @var \MageSuite\ContentConstructorFrontend\Service\ProductTileRenderer
+     */
+    protected $productTileRenderer;
+
+    /**
+     * @var \MageSuite\QuickReorder\Helper\Configuration
      */
     protected $configuration;
 
@@ -32,28 +37,25 @@ class LatestProductsPurchased extends \MageSuite\ContentConstructorFrontend\Mode
     protected $productCollectionFactory;
 
     /**
-     * @var \Magento\Framework\Serialize\Serializer\Json
+     * @var iterable|null
      */
-    protected $json;
+    protected $products = null;
 
     public function __construct(
         \MageSuite\ContentConstructorFrontend\Service\ProductTileRenderer $productTileRenderer,
-        \MageSuite\ContentConstructor\Components\ProductCarousel\DataProvider $dataProvider,
         \MageSuite\QuickReorder\Helper\Configuration $configuration,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Sales\Model\Spi\OrderItemResourceInterface $orderItemResource,
         \Magento\Catalog\Model\Config $catalogConfig,
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
-        \Magento\Framework\Serialize\Serializer\Json $json,
         array $data = []
     ) {
-        parent::__construct($productTileRenderer, $dataProvider, $data);
+        $this->productTileRenderer = $productTileRenderer;
         $this->configuration = $configuration;
         $this->customerSession = $customerSession;
         $this->orderItemResource = $orderItemResource;
         $this->catalogConfig = $catalogConfig;
         $this->productCollectionFactory = $productCollectionFactory;
-        $this->json = $json;
     }
 
     public function isEnabled()
@@ -64,16 +66,20 @@ class LatestProductsPurchased extends \MageSuite\ContentConstructorFrontend\Mode
     public function getProducts()
     {
         if (!$this->customerSession->isLoggedIn()) {
-            return null;
+            return [];
         }
         if ($this->products === null) {
             $orderItems = $this->getCustomerLatestOrderItems();
-            $this->products = $this->getLatestProductSkusOrderedByCurrentCustomer($orderItems);
+            $this->products = $this->getLatestProductsOrderedByCurrentCustomer($orderItems);
         }
         return $this->products;
     }
 
-    public function getLatestProductSkusOrderedByCurrentCustomer($orderItems)
+    public function renderProductTile($product) {
+        return $this->productTileRenderer->render($product, null, 'grid');
+    }
+
+    protected function getLatestProductsOrderedByCurrentCustomer($orderItems)
     {
         $products = $this->getSortedProductsFromOrderItems($orderItems);
         return $products;
@@ -87,7 +93,7 @@ class LatestProductsPurchased extends \MageSuite\ContentConstructorFrontend\Mode
             ->join(['so' => self::SALES_ORDER_TABLE], 'soi.order_id = so.entity_id', '')
             ->where('soi.parent_item_id IS NULL')
             ->where('so.customer_id = ?', $this->customerSession->getCustomerId())
-            ->where('so.state IN (?)', [\Magento\Sales\Model\Order::STATE_NEW, \Magento\Sales\Model\Order::STATE_PROCESSING, \Magento\Sales\Model\Order::STATE_COMPLETE])
+            ->where('so.status IN (?)', $this->configuration->getLatestProductPurchasedOrderStatus())
             ->group('product_id');
         $query = $connection->select()
             ->from(self::SALES_ORDER_ITEM_TABLE, ['product_id', 'product_options'])
@@ -103,7 +109,7 @@ class LatestProductsPurchased extends \MageSuite\ContentConstructorFrontend\Mode
         $productsCollection = $this->productCollectionFactory->create()
             ->addIdFilter($productIds)
             ->addAttributeToSelect($this->catalogConfig->getProductAttributes())
-            ->addFinalPrice()
+            ->addPriceData()
             ->addTaxPercents()
             ->addStoreFilter()
             ->addUrlRewrite()

@@ -12,6 +12,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>When enabled latest products purchased will be shown in customer area.</comment>
                 </field>
+                <field id="order_status" translate="label" type="multiselect" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Display products from orders with status</label>
+                    <source_model>MageSuite\QuickReorder\Model\Config\Source\OrderStatus</source_model>
+                    <comment>Select multiple statuses by pressing Ctrl button while selecting</comment>
+                </field>
                 <field id="product_count" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Product count</label>
                     <comment>Number of products to display in slider. When set to 0 it will display all products that were ever bought by customer.</comment>

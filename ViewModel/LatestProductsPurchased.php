@@ -75,7 +75,8 @@ class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\Lates
         return $this->products;
     }
 
-    public function renderProductTile($product) {
+    public function renderProductTile($product)
+    {
         return $this->productTileRenderer->render($product, null, 'grid');
     }
 
@@ -107,7 +108,8 @@ class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\Lates
             ->addTaxPercents()
             ->addStoreFilter()
             ->addUrlRewrite()
-            ->addMediaGalleryData();
+            ->addMediaGalleryData()
+            ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH);
         return $this->sortProducts($productsCollection->getItems(), $productIds);
     }
 

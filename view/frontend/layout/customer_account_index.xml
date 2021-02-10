@@ -6,6 +6,9 @@
                 <action method="setTemplate">
                     <argument name="template" xsi:type="string">MageSuite_QuickReorder::latest-products-purchased.phtml</argument>
                 </action>
+                <arguments>
+                    <argument xsi:type="string" name="headline_text" translate="true">Recently ordered products</argument>
+                </arguments>
             </block>
         </referenceContainer>
     </referenceContainer>

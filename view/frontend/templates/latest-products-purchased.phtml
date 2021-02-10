@@ -1,52 +1,57 @@
 <?php
 /** @var \MageSuite\QuickReorder\ViewModel\LatestProductsPurchased $viewModel */
 $viewModel = $block->getViewModel();
+$headlineText = $block->getHeadlineText();
 ?>
 <?php if ($viewModel->isEnabled() && ($products = $viewModel->getProducts())): ?>
     <?php
     $jsSettings = json_encode($block->getVar('product_carousel/js') ?: '{}');
     ?>
     <?= $block->getCssOnce('css/products-carousel.css'); ?>
-    <h3><?= __('Recently ordered products') ?></h3>
-    <div class="cs-container cs-container--products-carousel">
-        <div class="cs-container__inner">
-            <div class="cs-products-carousel" data-view-mode="grid"
-                 data-mage-init='{"ccProductsCarousel": <?= $jsSettings ?> }'>
-                <div class="cs-products-carousel__carousel">
-                    <div class="cs-products-carousel__wrapper">
-                        <ul class="cs-products-carousel__slides">
-                            <?php foreach ($products as $product): ?>
-                                <li class="cs-products-carousel__slide">
-                                    <div class="cs-products-carousel__product-tile">
-                                        <?= $viewModel->renderProductTile($product) ?>
-                                    </div>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
+    <div class="cs-container cs-container--latest-purchased-products cs-latest-purchased-products">
+        <div class="cs-headline">
+            <h3 class="cs-headline__title"><?= $headlineText ?></h3>
+        </div>
+        <div class="cs-container cs-container--products-carousel">
+            <div class="cs-container__inner">
+                <div class="cs-products-carousel" data-view-mode="grid"
+                    data-mage-init='{"ccProductsCarousel": <?= $jsSettings ?> }'>
+                    <div class="cs-products-carousel__carousel">
+                        <div class="cs-products-carousel__wrapper">
+                            <ul class="cs-products-carousel__slides">
+                                <?php foreach ($products as $product): ?>
+                                    <li class="cs-products-carousel__slide">
+                                        <div class="cs-products-carousel__product-tile">
+                                            <?= $viewModel->renderProductTile($product) ?>
+                                        </div>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                        <button
+                            class="cs-products-carousel__nav cs-products-carousel__nav--prev"
+                            type="button">
+                            <?= $this->getLayout()
+                                ->createBlock('MageSuite\ThemeHelpers\Block\Icon')
+                                ->setIconUrl($block->getVar('product_carousel/navigation/arrows/prev/path'))
+                                ->setCssClass("cs-products-carousel__nav-icon")
+                                ->setInlined(true)
+                                ->toHtml();
+                            ?>
+                        </button>
+                        <button
+                            class="cs-products-carousel__nav cs-products-carousel__nav--next"
+                            type="button">
+                            <?= $this->getLayout()
+                                ->createBlock('MageSuite\ThemeHelpers\Block\Icon')
+                                ->setIconUrl($block->getVar('product_carousel/navigation/arrows/next/path'))
+                                ->setCssClass("cs-products-carousel__nav-icon")
+                                ->setInlined(true)
+                                ->toHtml();
+                            ?>
+                        </button>
+                        <ul class="cs-products-carousel__pagination"></ul>
                     </div>
-                    <button
-                        class="cs-products-carousel__nav cs-products-carousel__nav--prev"
-                        type="button">
-                        <?= $this->getLayout()
-                            ->createBlock('MageSuite\ThemeHelpers\Block\Icon')
-                            ->setIconUrl($block->getVar('product_carousel/navigation/arrows/prev/path'))
-                            ->setCssClass("cs-products-carousel__nav-icon")
-                            ->setInlined(true)
-                            ->toHtml();
-                        ?>
-                    </button>
-                    <button
-                        class="cs-products-carousel__nav cs-products-carousel__nav--next"
-                        type="button">
-                        <?= $this->getLayout()
-                            ->createBlock('MageSuite\ThemeHelpers\Block\Icon')
-                            ->setIconUrl($block->getVar('product_carousel/navigation/arrows/next/path'))
-                            ->setCssClass("cs-products-carousel__nav-icon")
-                            ->setInlined(true)
-                            ->toHtml();
-                        ?>
-                    </button>
-                    <ul class="cs-products-carousel__pagination"></ul>
                 </div>
             </div>
         </div>

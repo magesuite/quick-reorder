@@ -23,8 +23,8 @@ $headlineText = $block->getHeadlineText();
                                     <li class="cs-products-carousel__slide">
                                         <?= $this->getLayout()
                                             ->createBlock(\MageSuite\ProductTile\Block\Tile::class)
-                                            ->setAreas(['latest_product_purchased'])
-                                            ->setSection('latest_product_purchased')
+                                            ->setAreas(['latest_products_purchased'])
+                                            ->setSection('latest_products_purchased')
                                             ->setViewMode('grid')
                                             ->render($product);
                                         ?>

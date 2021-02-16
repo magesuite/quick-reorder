@@ -3,14 +3,6 @@ namespace MageSuite\QuickReorder\ViewModel;
 
 class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\LatestProductsPurchasedInterface
 {
-    const SALES_ORDER_TABLE = 'sales_order';
-    const SALES_ORDER_ITEM_TABLE = 'sales_order_item';
-
-    /**
-     * @var \MageSuite\ContentConstructorFrontend\Service\ProductTileRenderer
-     */
-    protected $productTileRenderer;
-
     /**
      * @var \MageSuite\QuickReorder\Helper\Configuration
      */
@@ -22,9 +14,9 @@ class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\Lates
     protected $customerSession;
 
     /**
-     * @var \Magento\Sales\Model\ResourceModel\Order\Item
+     * @var \MageSuite\QuickReorder\Model\ResourceModel\LatestOrderItemResourceInterface
      */
-    protected $orderItemResource;
+    protected $latestOrderItemResource;
 
     /**
      * @var \Magento\Catalog\Model\Config
@@ -42,18 +34,16 @@ class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\Lates
     protected $products = null;
 
     public function __construct(
-        \MageSuite\ContentConstructorFrontend\Service\ProductTileRenderer $productTileRenderer,
         \MageSuite\QuickReorder\Helper\Configuration $configuration,
         \Magento\Customer\Model\Session $customerSession,
-        \Magento\Sales\Model\Spi\OrderItemResourceInterface $orderItemResource,
+        \MageSuite\QuickReorder\Model\ResourceModel\LatestOrderItemResourceInterface $latestOrderItemResource,
         \Magento\Catalog\Model\Config $catalogConfig,
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
         array $data = []
     ) {
-        $this->productTileRenderer = $productTileRenderer;
         $this->configuration = $configuration;
         $this->customerSession = $customerSession;
-        $this->orderItemResource = $orderItemResource;
+        $this->latestOrderItemResource = $latestOrderItemResource;
         $this->catalogConfig = $catalogConfig;
         $this->productCollectionFactory = $productCollectionFactory;
     }
@@ -75,27 +65,13 @@ class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\Lates
         return $this->products;
     }
 
-    public function renderProductTile($product)
-    {
-        return $this->productTileRenderer->render($product, null, 'grid');
-    }
-
     protected function getCustomerLatestOrderItems()
     {
-        $connection = $this->orderItemResource->getConnection();
-        $subQuery = $connection->select()
-            ->from(['soi' => self::SALES_ORDER_ITEM_TABLE], 'MAX(soi.item_id)')
-            ->join(['so' => self::SALES_ORDER_TABLE], 'soi.order_id = so.entity_id', '')
-            ->where('soi.parent_item_id IS NULL')
-            ->where('so.customer_id = ?', $this->customerSession->getCustomerId())
-            ->where('so.status IN (?)', $this->configuration->getLatestProductPurchasedOrderStatus())
-            ->group('product_id');
-        $query = $connection->select()
-            ->from(self::SALES_ORDER_ITEM_TABLE, ['product_id', 'product_options'])
-            ->where('item_id IN(?)', new \Zend_Db_Expr($subQuery->__toString()))
-            ->order('item_id DESC')
-            ->limit($this->configuration->getLatestProductsPurchasedProductCount());
-        return $connection->fetchAssoc($query);
+        return $this->latestOrderItemResource->getCustomerLatestOrderItems(
+            $this->customerSession->getCustomerId(),
+            $this->configuration->getLatestProductPurchasedOrderStatus(),
+            $this->configuration->getLatestProductsPurchasedProductCount()
+        );
     }
 
     protected function getSortedProductsFromOrderItems($orderItems)

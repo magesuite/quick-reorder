@@ -15,15 +15,19 @@ $headlineText = $block->getHeadlineText();
         <div class="cs-container cs-container--products-carousel">
             <div class="cs-container__inner">
                 <div class="cs-products-carousel" data-view-mode="grid"
-                    data-mage-init='{"ccProductsCarousel": <?= $jsSettings ?> }'>
+                     data-mage-init='{"ccProductsCarousel": <?= $jsSettings ?> }'>
                     <div class="cs-products-carousel__carousel">
                         <div class="cs-products-carousel__wrapper">
                             <ul class="cs-products-carousel__slides">
                                 <?php foreach ($products as $product): ?>
                                     <li class="cs-products-carousel__slide">
-                                        <div class="cs-products-carousel__product-tile">
-                                            <?= $viewModel->renderProductTile($product) ?>
-                                        </div>
+                                        <?= $this->getLayout()
+                                            ->createBlock(\MageSuite\ProductTile\Block\Tile::class)
+                                            ->setAreas(['latest_product_purchased'])
+                                            ->setSection('latest_product_purchased')
+                                            ->setViewMode('grid')
+                                            ->render($product);
+                                        ?>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>

@@ -1,0 +1,33 @@
+<aside role="dialog" class="cs-reorder-banner cs-container">
+    <div data-role="focusable-start" tabindex="0"></div>
+    <div class="cs-container__inner" data-role="focusable-scope">
+        <div class="cs-reorder-banner__inner">
+            <div class="cs-reorder-banner__start">
+                <p class="cs-reorder-banner__text-welcome">
+                    <%= data.welcomeText %>
+                </p> 
+            </div>
+            <div class="cs-reorder-banner__end">
+                <p class="cs-reorder-banner__order">
+                    <span class="cs-reorder-banner__order-text"><%= data.lastOrderText %></span>
+                    <span class="cs-reorder-banner__products-count"><%= data.productsCount %> - </span>
+                    <span class="cs-reorder-banner__amount"><%= data.amount %></span>
+                </p>
+                <p class="cs-reorder-banner__items">
+                    <%= data.lastOrderedItems %>
+                </p>
+                <form class="cs-reorder-banner__form" action="<%= data.lastOrderReorderLink %>" method="POST">
+                    <button type="submit" class="cs-reorder-banner__button">
+                        <span class="cs-reorder-banner__button-span">
+                            <%= data.buttonText %>
+                        </span>
+                    </button>
+                    <span class="cs-reorder-banner__close">
+                        <%= data.closeText %>
+                    </span>
+                </form>
+            </div>
+        </div>    
+    </div>
+    <div data-role="focusable-end" tabindex="0"></div>
+</aside>

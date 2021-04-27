@@ -14,6 +14,7 @@ define([
             lastOrderText: 'Your last %link order',
             buttonText: 'Reorder',
             showLastOrderedItems: true,
+            maxProductNameLength: 26, // cut product name after this value to save space
             timeoutToShowBanner: 3000
         },
         _create: function() {
@@ -83,48 +84,56 @@ define([
                 $('.cs-reorder-banner__form').submit();
             });
         },
-        _prepareBannerData: function() {
+        _prepareWelcomeText: function() {
             var welcomeText = $.mage.__(this.options.welcomeText);
             welcomeText = welcomeText.replace(
                 '%name',
                 this.customerInfo.firstname
             );
 
+            return welcomeText;
+        },
+        _prepareLastOrderText: function() {
             var lastOrderText = $.mage.__(this.options.lastOrderText);
             lastOrderText = lastOrderText.replace(
                 '%link',
                 '<a href="' + this.customerInfo.lastOrderViewLink + '" class="cs-reorder-banner__link">'
             ) + '</a>';
 
-            var productsCount = this.customerInfo.lastOrderItemsCount + ' ' +
-            (this.customerInfo.lastOrderItemsCount > 1
-                ? $.mage.__('products')
-                : $.mage.__('product'));
-
+             return lastOrderText ;
+        },
+        _prepareLastOrderItems: function() {
+            var $widget = this;
             var lastOrderedItems = this.customerInfo.lastOrderItems.map(function(value, index, array) {
                 if (index < 2) {
                     var name = value.name;
-                    if (value.name.length > 26) {
-                        name = name.substring(0, 26) + '...';
+                    if (value.name.length > $widget.options.maxProductNameLength) {
+                        name = name.substring(0, $widget.options.maxProductNameLength) + '...';
                     }
 
                     return '<span>' + name + '<span class="cs-reorder-banner__item-count">' + value.count + 'x</span><span><br>';
                 } else if (index === 2) {
-                    return (array.length - 2) + ' ' + $.mage.__('more') + '...';
+                    return $.mage.__('%qty more…').replace(
+                            '%qty',
+                            array.length - 2
+                        );
                 } else {
                     return '';
                 }
             });
 
-            lastOrderedItems = lastOrderedItems.join('');
+            return lastOrderedItems.join('');
+        },
+        _prepareBannerData: function() {
+            var itemsCount = this.customerInfo.lastOrderItemsCount;
 
             return {
-                welcomeText: welcomeText,
-                lastOrderText: lastOrderText,
+                welcomeText: this._prepareWelcomeText(),
+                lastOrderText: this._prepareLastOrderText(),
                 lastOrderReorderLink: this.options.showLastOrderedItems ? this.customerInfo.lastOrderReorderLink: '',
                 amount:  this.customerInfo.lastOrderAmount,
-                productsCount: productsCount,
-                lastOrderedItems: lastOrderedItems,
+                productsCount: itemsCount + ' ' + (itemsCount > 1 ? $.mage.__('products') : $.mage.__('product')),
+                lastOrderedItems: this._prepareLastOrderItems(),
                 buttonText: $.mage.__(this.options.buttonText),
                 closeText: $.mage.__('Close'),
             };

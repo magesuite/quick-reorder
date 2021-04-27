@@ -19,6 +19,11 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
     protected $reorderHelper;
 
     /**
+     * @var \MageSuite\QuickReorder\Helper\Configuration
+     */
+    protected $configuration;
+
+    /**
      * @var \Magento\Customer\Model\Session
      */
     protected $customerSession;
@@ -32,6 +37,7 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
         \Magento\Sales\Helper\Reorder $reorderHelper,
+        \MageSuite\QuickReorder\Helper\Configuration $configuration,
         \Magento\Customer\Model\Session $customerSession,
         \MageSuite\QuickReorder\Model\Customer\GetLastOrderByCustomerId $getLastOrderByCustomerId
     ) {
@@ -39,6 +45,7 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
         $this->priceCurrency = $priceCurrency;
         $this->customerSession = $customerSession;
         $this->reorderHelper = $reorderHelper;
+        $this->configuration = $configuration;
         $this->getLastOrderByCustomerId = $getLastOrderByCustomerId;
     }
 
@@ -47,7 +54,15 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
      */
     public function getSectionData()
     {
-        if (!$this->reorderHelper->isAllowed() || !$this->customerSession->isLoggedIn()) {
+        if (!$this->reorderHelper->isAllowed()) {
+            return [];
+        }
+
+        if (!$this->configuration->isReorderBannerEnabled()) {
+            return [];
+        }
+
+        if (!$this->customerSession->isLoggedIn()) {
             return [];
         }
 
@@ -75,7 +90,7 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
                 /** @var $orderItem \Magento\Sales\Api\Data\OrderItemInterface */
                 return [
                     'name' => $orderItem->getName(),
-                    'count' => $orderItem->getQtyOrdered()
+                    'count' => (int)$orderItem->getQtyOrdered()
                 ];
             }, $order->getItems())
         );

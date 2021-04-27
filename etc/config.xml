@@ -7,6 +7,9 @@
                 <order_status>pending,pending_payment,processing,complete</order_status>
                 <product_count>8</product_count>
             </latest_products_purchased>
+            <reorder_banner>
+                <enable_reorder_banner>0</enable_reorder_banner>
+            </reorder_banner>
         </quick_reorder>
     </default>
 </config>

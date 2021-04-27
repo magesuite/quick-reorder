@@ -86,13 +86,18 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
     public function prepareOrderItems(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         return array_values(
-            array_map(function ($orderItem) {
-                /** @var $orderItem \Magento\Sales\Api\Data\OrderItemInterface */
-                return [
-                    'name' => $orderItem->getName(),
-                    'count' => (int)$orderItem->getQtyOrdered()
-                ];
-            }, $order->getItems())
+            array_filter(
+                array_map(function ($orderItem) {
+                    /** @var $orderItem \Magento\Sales\Api\Data\OrderItemInterface */
+                    if ($orderItem->getParentItemId() !== null) {
+                        return null;
+                    }
+                    return [
+                        'name' => $orderItem->getName(),
+                        'count' => (int)$orderItem->getQtyOrdered()
+                    ];
+                }, $order->getItems())
+            )
         );
     }
 }

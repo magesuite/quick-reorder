@@ -1,6 +1,5 @@
 <?php
-
-namespace Creativestyle\MageSuiteQuickReorder\Model\Customer;
+namespace MageSuite\QuickReorder\Model\Customer;
 
 class GetLastOrderByCustomerId
 {
@@ -30,8 +29,7 @@ class GetLastOrderByCustomerId
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Framework\Api\FilterBuilder $filterBuilder,
         \Magento\Framework\Api\SortOrderBuilder $sortOrderBuilder
-    )
-    {
+    ) {
         $this->orderRepository = $orderRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;

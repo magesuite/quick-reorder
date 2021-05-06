@@ -14,13 +14,17 @@ define([
             lastOrderText: 'Your last %link order',
             buttonText: 'Reorder',
             showLastOrderedItems: true,
-            maxProductNameLength: 26, // cut product name after this value to save space
+            maxProductNameLength: 26, // cut product name after x characters to save space
             timeoutToShowBanner: 3000
         },
+        /**
+         * Init reorder banner only if user have not closed or used it during the current session
+         * Get reorder-banner data from customerData then prepare and append html
+         */
         _create: function() {
             if (
                 sessionStorage.getItem('magesuite-reorder-banner-close') ||
-                sessionStorage.getItem('magesuite-reorder-banner-clicked')
+                sessionStorage.getItem('magesuite-reorder-banner-used')
             ) {
                 return false;
             }
@@ -40,11 +44,17 @@ define([
                 this._attachEvents();
             }
         },
+        /**
+         * When the banner is about to be shown for the first time in a current session 
+         * show banner with delay and with a sliding animation to catch user's attention.
+         * Do not animate and delay banner again anymore because it can be too annoying to the user.
+         * Set 'magesuite-reorder-banner-shown' item in sessionStorage to define that banner was already shown with animation
+         */
         _handleInitialShow: function() {
             var widget = this;
             var $reorderBanner = this.$reorderBanner;
 
-            // Timeout is set to wait until assets are load and browser is ready to display transition smoothly
+            // Timeout is set to wait until assets are loaded and browser is ready to display transition smoothly
             // Transition is added to better catch users' attention (only for te first time)
 
             if (sessionStorage.getItem('magesuite-reorder-banner-shown')) {
@@ -63,6 +73,12 @@ define([
 
             $('body').addClass('reorder-banner-visible');
         },
+        /**
+         * Close banner after click on X icon and do not show it again in the current session - 
+         * set 'magesuite-reorder-banner-close' entry in sessionStorage.
+         * Submit reorder form to add products to the cart. Then set 'magesuite-reorder-banner-used' entry and
+         * do not show banner again.
+         */
         _attachEvents: function() {
             var $reorderBanner = this.$reorderBanner;
             $('.cs-reorder-banner__close').on('click', function() {
@@ -77,7 +93,7 @@ define([
             $('.cs-reorder-banner__button').on('click', function(e) {
                 e.preventDefault();
                 sessionStorage.setItem(
-                    'magesuite-reorder-banner-clicked',
+                    'magesuite-reorder-banner-used',
                     'true'
                 );
 

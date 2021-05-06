@@ -1,6 +1,5 @@
 <?php
-
-namespace Creativestyle\MageSuiteQuickReorder\Test\Unit\CustomerData;
+namespace MageSuite\QuickReorder\Test\Unit\CustomerData;
 
 class ReorderBannerTest extends \PHPUnit\Framework\TestCase
 {

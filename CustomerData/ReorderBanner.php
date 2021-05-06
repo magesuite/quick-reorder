@@ -1,6 +1,5 @@
 <?php
-
-namespace MageSuiteQuickReorder\CustomerData\ReorderBanner;
+namespace MageSuite\QuickReorder\CustomerData;
 
 class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInterface
 {
@@ -20,12 +19,17 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
     protected $reorderHelper;
 
     /**
+     * @var \MageSuite\QuickReorder\Helper\Configuration
+     */
+    protected $configuration;
+
+    /**
      * @var \Magento\Customer\Model\Session
      */
     protected $customerSession;
 
     /**
-     * @var \Creativestyle\MageSuiteQuickReorder\Model\Customer\GetLastOrderByCustomerId
+     * @var MageSuite\QuickReorder\Model\Customer\GetLastOrderByCustomerId
      */
     protected $getLastOrderByCustomerId;
 
@@ -33,14 +37,15 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
         \Magento\Sales\Helper\Reorder $reorderHelper,
+        \MageSuite\QuickReorder\Helper\Configuration $configuration,
         \Magento\Customer\Model\Session $customerSession,
-        \Creativestyle\MageSuiteQuickReorder\Model\Customer\GetLastOrderByCustomerId $getLastOrderByCustomerId
-    )
-    {
+        \MageSuite\QuickReorder\Model\Customer\GetLastOrderByCustomerId $getLastOrderByCustomerId
+    ) {
         $this->urlBuilder = $urlBuilder;
         $this->priceCurrency = $priceCurrency;
         $this->customerSession = $customerSession;
         $this->reorderHelper = $reorderHelper;
+        $this->configuration = $configuration;
         $this->getLastOrderByCustomerId = $getLastOrderByCustomerId;
     }
 
@@ -49,7 +54,15 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
      */
     public function getSectionData()
     {
-        if (!$this->reorderHelper->isAllowed() || !$this->customerSession->isLoggedIn()) {
+        if (!$this->reorderHelper->isAllowed()) {
+            return [];
+        }
+
+        if (!$this->configuration->isReorderBannerEnabled()) {
+            return [];
+        }
+
+        if (!$this->customerSession->isLoggedIn()) {
             return [];
         }
 
@@ -64,8 +77,27 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
             'firstname' => $customer->getFirstname(),
             'lastOrderAmount' => $this->priceCurrency->convertAndFormat($lastOrder->getBaseGrandTotal(), false),
             'lastOrderItemsCount' => (int)$lastOrder->getTotalQtyOrdered(),
+            'lastOrderItems' => $this->prepareOrderItems($lastOrder),
             'lastOrderReorderLink' => $this->urlBuilder->getUrl('sales/order/reorder', ['order_id' => $lastOrder->getId()]),
             'lastOrderViewLink' => $this->urlBuilder->getUrl('sales/order/view', ['order_id' => $lastOrder->getId()])
         ];
+    }
+
+    public function prepareOrderItems(\Magento\Sales\Api\Data\OrderInterface $order)
+    {
+        return array_values(
+            array_filter(
+                array_map(function ($orderItem) {
+                    /** @var $orderItem \Magento\Sales\Api\Data\OrderItemInterface */
+                    if ($orderItem->getParentItemId() !== null) {
+                        return null;
+                    }
+                    return [
+                        'name' => $orderItem->getName(),
+                        'count' => (int)$orderItem->getQtyOrdered()
+                    ];
+                }, $order->getItems())
+            )
+        );
     }
 }

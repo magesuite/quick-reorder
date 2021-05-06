@@ -100,6 +100,10 @@ define([
                 $('.cs-reorder-banner__form').submit();
             });
         },
+        /**
+         * Add welcome text:
+         * "Welcome back John, Would you like to reorder your last purchase?"
+        */
         _prepareWelcomeText: function() {
             var welcomeText = $.mage.__(this.options.welcomeText);
             welcomeText = welcomeText.replace(
@@ -109,6 +113,11 @@ define([
 
             return welcomeText;
         },
+        /**
+         * Add last order text:
+         * "Your last order 34.55 EUR"
+         * Order is a link leading to last order in customer dashboard (user area)
+        */
         _prepareLastOrderText: function() {
             var lastOrderText = $.mage.__(this.options.lastOrderText);
             lastOrderText = lastOrderText.replace(
@@ -118,6 +127,11 @@ define([
 
              return lastOrderText ;
         },
+        /**
+         * Add text with last order products:
+         * Show 2 first products with amount of items
+         * Add link "X more" if there is more products
+        */
         _prepareLastOrderItems: function() {
             var $widget = this;
             var lastOrderedItems = this.customerInfo.lastOrderItems.map(function(value, index, array) {
@@ -140,6 +154,9 @@ define([
 
             return lastOrderedItems.join('');
         },
+        /**
+         * Gather all data that are needed in html template
+        */
         _prepareBannerData: function() {
             var itemsCount = this.customerInfo.lastOrderItemsCount;
 

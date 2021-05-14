@@ -38,7 +38,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
      */
     protected $reorderBannerDataSection;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
 

@@ -14,12 +14,17 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
     protected $reorderHelperStub;
 
     /**
+     * @var \MageSuite\QuickReorder\Helper\Configuration|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $configurationStub;
+
+    /**
      * @var \Magento\Customer\Model\Session|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $customerSessionStub;
 
     /**
-     * @var \Creativestyle\MageSuiteQuickReorder\Model\Customer\GetLastOrderByCustomerId|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageSuite\QuickReorder\Model\Customer\GetLastOrderByCustomerId|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $getLastOrderByCustomerIdStub;
 
@@ -34,7 +39,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
     protected $orderStub;
 
     /**
-     * @var \Creativestyle\MageSuiteQuickReorder\CustomerData\ReorderBanner
+     * @var \MageSuite\QuickReorder\CustomerData\ReorderBanner
      */
     protected $reorderBannerDataSection;
 
@@ -46,11 +51,17 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()
             ->setMethods(['isAllowed'])
             ->getMock();
+
+        $this->configurationStub = $this->getMockBuilder(\MageSuite\QuickReorder\Helper\Configuration::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isReorderBannerEnabled'])
+            ->getMock();
+
         $this->customerSessionStub = $this->getMockBuilder(\Magento\Customer\Model\Session::class)
             ->disableOriginalConstructor()
             ->setMethods(['isLoggedIn', 'getCustomer'])
             ->getMock();
-        $this->getLastOrderByCustomerIdStub = $this->getMockBuilder(\Creativestyle\MageSuiteQuickReorder\Model\Customer\GetLastOrderByCustomerId::class)
+        $this->getLastOrderByCustomerIdStub = $this->getMockBuilder(\MageSuite\QuickReorder\Model\Customer\GetLastOrderByCustomerId::class)
             ->disableOriginalConstructor()
             ->setMethods(['execute'])
             ->getMock();
@@ -61,7 +72,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $this->orderStub = $this->getMockBuilder(\Magento\Sales\Model\Order::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getBaseGrandTotal', 'getTotalQtyOrdered'])
+            ->setMethods(['getId', 'getBaseGrandTotal', 'getTotalQtyOrdered', 'getItems'])
             ->getMock();
 
         $this->customerSessionStub->expects($this->any())
@@ -69,10 +80,11 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
             ->willReturn($this->customerStub);
 
         $this->reorderBannerDataSection = $this->objectManager->create(
-            \Creativestyle\MageSuiteQuickReorder\CustomerData\ReorderBanner::class,
+            \MageSuite\QuickReorder\CustomerData\ReorderBanner::class,
             [
                 'reorderHelper' => $this->reorderHelperStub,
                 'customerSession' => $this->customerSessionStub,
+                'configuration' => $this->configurationStub,
                 'getLastOrderByCustomerId' => $this->getLastOrderByCustomerIdStub
             ]
         );
@@ -89,6 +101,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, $this->reorderBannerDataSection->getSectionData());
     }
 
+
     public function testGetSectionDataForNotLoggedIn()
     {
         $expectedResult = [];
@@ -97,7 +110,11 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
             ->method('isAllowed')
             ->willReturn(true);
 
-        $this->customerSessionStub->expects($this->once())
+        $this->configurationStub->expects($this->once())
+            ->method('isReorderBannerEnabled')
+            ->willReturn(true);
+
+        $this->customerSessionStub->expects($this->atMost(1))
             ->method('isLoggedIn')
             ->willReturn(false);
 
@@ -112,7 +129,11 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
             ->method('isAllowed')
             ->willReturn(true);
 
-        $this->customerSessionStub->expects($this->once())
+        $this->configurationStub->expects($this->once())
+            ->method('isReorderBannerEnabled')
+            ->willReturn(true);
+
+        $this->customerSessionStub->expects($this->atMost(1))
             ->method('isLoggedIn')
             ->willReturn(true);
 
@@ -129,12 +150,26 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
             'firstname' => 'John',
             'lastOrderAmount' => '$34.54',
             'lastOrderItemsCount' => 2,
+            'lastOrderItems' => [
+                [
+                    'name' => 'test1',
+                    'count' => 1
+                ],
+                [
+                    'name' => 'test2',
+                    'count' => 1
+                ]
+            ],
             'lastOrderReorderLink' => 'http://localhost/index.php/sales/order/reorder/order_id/1/',
             'lastOrderViewLink' => 'http://localhost/index.php/sales/order/view/order_id/1/',
         ];
 
         $this->reorderHelperStub->expects($this->once())
             ->method('isAllowed')
+            ->willReturn(true);
+
+        $this->configurationStub->expects($this->once())
+            ->method('isReorderBannerEnabled')
             ->willReturn(true);
 
         $this->customerSessionStub->expects($this->once())
@@ -160,6 +195,13 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
         $this->orderStub->expects($this->once())
             ->method('getTotalQtyOrdered')
             ->willReturn(2);
+
+        $this->orderStub->expects($this->once())
+            ->method('getItems')
+            ->willReturn([
+                new \Magento\Framework\DataObject(['name' => 'test1', 'qty_ordered' => 1]),
+                new \Magento\Framework\DataObject(['name' => 'test2', 'qty_ordered' => 1])
+            ]);
 
         $this->assertEquals($expectedResult, $this->reorderBannerDataSection->getSectionData());
     }

@@ -12,6 +12,4 @@
             </block>
         </referenceContainer>
     </referenceContainer>
-
-    <referenceBlock name="reorder.banner" remove="true" />
 </page>

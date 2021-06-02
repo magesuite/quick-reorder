@@ -4,15 +4,16 @@ define([
     'Magento_Customer/js/customer-data',
     'text!MageSuite_QuickReorder/template/reorder-banner.html',
     'jquery-ui-modules/widget',
-    'mage/translate',
+    'mage/translate'
 ], function($, mageTemplate, customerData, modalTemplate) {
     'use strict';
 
     $.widget('magesuite.reorderBanner', {
         options: {
-            welcomeText: '<span>Welcome back %name,</span><br><span>Would you like to reorder your last purchase?</span>',
-            lastOrderText: 'Your last %link order',
-            buttonText: 'Reorder',
+            welcomeText: $.mage.__('<span>Welcome back %name,</span><br><span>Would you like to reorder your last purchase?</span>'),
+            lastOrderText: $.mage.__('Your last %link order'),
+            buttonText: $.mage.__('Reorder'),
+            listSubheadlineText: $.mage.__('%qty more...'),
             showLastOrderedItems: true,
             maxProductNameLength: 26, // cut product name after x characters to save space
             timeoutToShowBanner: 3000
@@ -45,7 +46,7 @@ define([
             }
         },
         /**
-         * When the banner is about to be shown for the first time in a current session 
+         * When the banner is about to be shown for the first time in a current session
          * show banner with delay and with a sliding animation to catch user's attention.
          * Do not animate and delay banner again anymore because it can be too annoying to the user.
          * Set 'magesuite-reorder-banner-shown' item in sessionStorage to define that banner was already shown with animation
@@ -74,7 +75,7 @@ define([
             $('body').addClass('reorder-banner-visible');
         },
         /**
-         * Close banner after click on X icon and do not show it again in the current session - 
+         * Close banner after click on X icon and do not show it again in the current session -
          * set 'magesuite-reorder-banner-close' entry in sessionStorage.
          * Submit reorder form to add products to the cart. Then set 'magesuite-reorder-banner-used' entry and
          * do not show banner again.
@@ -105,7 +106,7 @@ define([
          * "Welcome back John, Would you like to reorder your last purchase?"
         */
         _prepareWelcomeText: function() {
-            var welcomeText = $.mage.__(this.options.welcomeText);
+            var welcomeText = this.options.welcomeText;
             welcomeText = welcomeText.replace(
                 '%name',
                 this.customerInfo.firstname
@@ -119,7 +120,7 @@ define([
          * Order is a link leading to last order in customer dashboard (user area)
         */
         _prepareLastOrderText: function() {
-            var lastOrderText = $.mage.__(this.options.lastOrderText);
+            var lastOrderText = this.options.lastOrderText;
             lastOrderText = lastOrderText.replace(
                 '%link',
                 '<a href="' + this.customerInfo.lastOrderViewLink + '" class="cs-reorder-banner__link">'
@@ -143,7 +144,7 @@ define([
 
                     return '<span>' + name + '<span class="cs-reorder-banner__item-count">' + value.count + 'x</span><span><br>';
                 } else if (index === 2) {
-                    return $.mage.__('%qty more…').replace(
+                    return $widget.options.listSubheadlineText.replace(
                             '%qty',
                             array.length - 2
                         );

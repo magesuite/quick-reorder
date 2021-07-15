@@ -10,7 +10,8 @@ define([
 
     $.widget('magesuite.reorderBanner', {
         options: {
-            welcomeText: $.mage.__('<span>Welcome back %name,</span><br><span>Would you like to reorder your last purchase?</span>'),
+            welcomeText: $.mage.__('Welcome back %name'),
+            reorderQuestion: $.mage.__('Would you like to reorder your last purchase?'),
             lastOrderText: $.mage.__('Your last %link order'),
             buttonText: $.mage.__('Reorder'),
             listSubheadlineText: $.mage.__('%qty more...'),
@@ -107,12 +108,21 @@ define([
         */
         _prepareWelcomeText: function() {
             var welcomeText = this.options.welcomeText;
+            var reorderQuestion = this.options.reorderQuestion;
+
             welcomeText = welcomeText.replace(
                 '%name',
                 this.customerInfo.firstname
             );
 
-            return welcomeText;
+            var outputHtml = "<strong>"
+                + welcomeText
+                + ",</strong></br>"
+                + "<span>"
+                + reorderQuestion
+                + "</span>"
+
+            return outputHtml;
         },
         /**
          * Add last order text:

@@ -174,10 +174,10 @@ define([
             return {
                 welcomeText: this._prepareWelcomeText(),
                 lastOrderText: this._prepareLastOrderText(),
-                lastOrderReorderLink: this.options.showLastOrderedItems ? this.customerInfo.lastOrderReorderLink: '',
+                lastOrderReorderLink: this.customerInfo.lastOrderReorderLink,
                 amount:  this.customerInfo.lastOrderAmount,
                 productsCount: itemsCount + ' ' + (itemsCount > 1 ? $.mage.__('products') : $.mage.__('product')),
-                lastOrderedItems: this._prepareLastOrderItems(),
+                lastOrderedItems: this.options.showLastOrderedItems ? this._prepareLastOrderItems(): '',
                 buttonText: $.mage.__(this.options.buttonText),
                 closeText: $.mage.__('Close'),
             };

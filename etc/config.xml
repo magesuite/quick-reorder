@@ -9,6 +9,7 @@
             </latest_products_purchased>
             <reorder_banner>
                 <enable_reorder_banner>0</enable_reorder_banner>
+                <reorder_banner_hide_time>7</reorder_banner_hide_time>
             </reorder_banner>
         </quick_reorder>
     </default>

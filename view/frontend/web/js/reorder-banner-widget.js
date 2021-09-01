@@ -20,13 +20,15 @@ define([
             timeoutToShowBanner: 3000
         },
         /**
-         * Init reorder banner only if user have not closed or used it during the current session
+         * Init reorder banner only if user have not closed recently (with treshold set in days in Admin panel, default: 7),
+         * or used it during the current session.
          * Get reorder-banner data from customerData then prepare and append html
          */
         _create: function() {
             if (
-                sessionStorage.getItem('magesuite-reorder-banner-close') ||
-                sessionStorage.getItem('magesuite-reorder-banner-used')
+                (localStorage.getItem('magesuite-reorder-banner-close')
+                    && Date.now() < Number(localStorage.getItem('magesuite-reorder-banner-close-time')) + this.options.hideTime * 86400000) ||
+                localStorage.getItem('magesuite-reorder-banner-used')
             ) {
                 return false;
             }
@@ -50,7 +52,7 @@ define([
          * When the banner is about to be shown for the first time in a current session
          * show banner with delay and with a sliding animation to catch user's attention.
          * Do not animate and delay banner again anymore because it can be too annoying to the user.
-         * Set 'magesuite-reorder-banner-shown' item in sessionStorage to define that banner was already shown with animation
+         * Set 'magesuite-reorder-banner-shown' item in localStorage to define that banner was already shown with animation
          */
         _handleInitialShow: function() {
             var widget = this;
@@ -59,14 +61,14 @@ define([
             // Timeout is set to wait until assets are loaded and browser is ready to display transition smoothly
             // Transition is added to better catch users' attention (only for te first time)
 
-            if (sessionStorage.getItem('magesuite-reorder-banner-shown')) {
+            if (localStorage.getItem('magesuite-reorder-banner-shown')) {
                 this.$reorderBanner.addClass(
                     'cs-reorder-banner--display cs-reorder-banner--show'
                 );
             } else {
                 setTimeout(function() {
                     $reorderBanner.addClass('cs-reorder-banner--show');
-                    sessionStorage.setItem(
+                    localStorage.setItem(
                         'magesuite-reorder-banner-shown',
                         'true'
                     );
@@ -77,7 +79,7 @@ define([
         },
         /**
          * Close banner after click on X icon and do not show it again in the current session -
-         * set 'magesuite-reorder-banner-close' entry in sessionStorage.
+         * set 'magesuite-reorder-banner-close' entry in localStorage.
          * Submit reorder form to add products to the cart. Then set 'magesuite-reorder-banner-used' entry and
          * do not show banner again.
          */
@@ -86,18 +88,25 @@ define([
             $('.cs-reorder-banner__close').on('click', function() {
                 $reorderBanner.removeClass('cs-reorder-banner--show');
                 $('body').removeClass('reorder-banner-visible');
-                sessionStorage.setItem(
+                localStorage.setItem(
                     'magesuite-reorder-banner-close',
                     'true'
+                );
+                localStorage.setItem(
+                    'magesuite-reorder-banner-close-time',
+                    Date.now()
                 );
             });
 
             $('.cs-reorder-banner__button').on('click', function(e) {
                 e.preventDefault();
-                sessionStorage.setItem(
+                localStorage.setItem(
                     'magesuite-reorder-banner-used',
                     'true'
                 );
+                localStorage.removeItem('magesuite-reorder-banner-close');
+                localStorage.removeItem('magesuite-reorder-banner-close-time');
+                localStorage.removeItem('magesuite-reorder-banner-shown');
 
                 $('.cs-reorder-banner__form').submit();
             });

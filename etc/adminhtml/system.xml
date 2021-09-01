@@ -29,6 +29,10 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>When enabled reorder banner will be shown at the top of page for logged in users.</comment>
                 </field>
+                <field id="reorder_banner_hide_time" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Reorder Banner hide time</label>
+                    <comment>Set time in days to hide reorder banner after user closed it</comment>
+                </field>
             </group>
         </section>
     </system>

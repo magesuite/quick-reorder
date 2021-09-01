@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <body>    
+    <body>
         <referenceContainer name="page.wrapper">
-            <block ifconfig="quick_reorder/reorder_banner/enable_reorder_banner" name="reorder.banner" template="MageSuite_QuickReorder::reorder-banner.phtml" after="-" />
+            <block ifconfig="quick_reorder/reorder_banner/enable_reorder_banner" name="reorder.banner" template="MageSuite_QuickReorder::reorder-banner.phtml" after="-">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">MageSuite\QuickReorder\ViewModel\ReorderBanner</argument>
+                </arguments>
+            </block>
         </referenceContainer>
     </body>
 </page>

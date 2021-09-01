@@ -2,5 +2,9 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="reorder.banner" remove="true" />
+
+        <referenceContainer name="page.wrapper">
+            <block ifconfig="quick_reorder/reorder_banner/enable_reorder_banner" name="reorder.banner.reset" template="MageSuite_QuickReorder::reoreder-banner-reset.phtml" after="-" />
+        </referenceContainer>
     </body>
-</page>    
+</page>

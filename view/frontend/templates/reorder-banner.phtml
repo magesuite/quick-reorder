@@ -1,7 +1,13 @@
+<?php
+/** @var \MageSuite\QuickReorder\ViewModel\ReorderBanner $viewModel */
+$viewModel = $block->getViewModel();
+?>
 <script type="text/x-magento-init">
     {
         "*": {
-            "MageSuite_QuickReorder/js/reorder-banner-widget": {}
+            "MageSuite_QuickReorder/js/reorder-banner-widget": {
+                "hideTime": <?= $viewModel->getHideTime(); ?>
+            }
         }
     }
 </script>

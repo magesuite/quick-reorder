@@ -17,10 +17,11 @@ class LatestOrderItem extends \Magento\Framework\Model\ResourceModel\Db\Abstract
             ->where('soi.parent_item_id IS NULL')
             ->where('so.customer_id = ?', $customerId)
             ->where('so.status IN (?)', $statuses)
-            ->group('product_id');
+            ->group('product_id')
+            ->order(new \Zend_Db_Expr('NULL'));
         $query = $connection->select()
             ->from(self::SALES_ORDER_ITEM_TABLE, ['product_id', 'product_options'])
-            ->where('item_id IN(?)', new \Zend_Db_Expr($subQuery->__toString()))
+            ->where('item_id IN(?)', new \Zend_Db_Expr("SELECT * FROM ({$subQuery->__toString()}) AS subquery"))
             ->order('item_id DESC')
             ->limit($count);
         return $connection->fetchAssoc($query);

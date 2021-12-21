@@ -101,7 +101,6 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, $this->reorderBannerDataSection->getSectionData());
     }
 
-
     public function testGetSectionDataForNotLoggedIn()
     {
         $expectedResult = [];

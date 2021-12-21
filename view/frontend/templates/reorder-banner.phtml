@@ -6,7 +6,7 @@ $viewModel = $block->getViewModel();
     {
         "*": {
             "MageSuite_QuickReorder/js/reorder-banner-widget": {
-                "hideTime": <?= $viewModel->getHideTime(); ?>
+                "hideTime": <?= /* @noEscape */ $viewModel->getHideTime(); ?>
             }
         }
     }

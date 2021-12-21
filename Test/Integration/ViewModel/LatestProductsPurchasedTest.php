@@ -109,6 +109,22 @@ class LatestProductsPurchasedTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(0, $products);
     }
 
+    /**
+     * @magentoAppIsolation enabled
+     * @magentoDbIsolation enabled
+     * @magentoDataFixture Magento/Customer/_files/customer.php
+     * @magentoDataFixture MageSuite_QuickReorder::Test/Integration/_files/order_with_customer_and_grouped_product.php
+     */
+    public function testItReturnsCorrectProductsForLoggedInUserWhichHaveOrderWithGroupedProducts()
+    {
+        $this->customerSession->setCustomerAsLoggedIn($this->getCustomer());
+        $products = $this->latestProductsPurchased->getProducts();
+        $this->assertCount(1, $products);
+
+        $product = $products[0];
+        $this->assertEquals(\Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE, $product->getTypeId());
+    }
+
     protected function getCustomer()
     {
         return $this->customer->load(1);

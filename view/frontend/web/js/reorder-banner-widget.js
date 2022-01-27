@@ -40,9 +40,14 @@ define([
             if (this.customerInfo && this.customerInfo.lastOrderReorderLink) {
                 this._initReorderBanner();
             } else {
-                customerData.get('reorder-banner').subscribe(function(data) {
-                    this.customerInfo = data;
-                    this._initReorderBanner();
+                var subscribe = customerData.get('reorder-banner').subscribe(function (data) {
+
+                    if (data.lastOrderReorderLink) {
+                        this.customerInfo = data;
+                        this._initReorderBanner();
+    
+                        subscribe.dispose();
+                    }
                 }.bind(this));
             }
         },

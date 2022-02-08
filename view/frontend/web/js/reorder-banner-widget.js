@@ -35,19 +35,34 @@ define([
 
             this.customerInfo = customerData.get('reorder-banner')();
 
-            if (this.customerInfo.lastOrderReorderLink) {
-                $('.page-wrapper').prepend(
-                    mageTemplate(modalTemplate)({
-                        data: this._prepareBannerData(),
-                    })
-                );
-
-                this.$reorderBanner = $('.cs-reorder-banner');
-
-                this._handleInitialShow();
-                this._attachEvents();
-            }
+            this._initReorderBanner();
         },
+        /**
+         * Sometimes customerData are not available in the moment reorder banner is created
+         * In such case subscribe to customerData to be able to display it later, when data appear
+         */
+        _initReorderBanner() {
+            if (!this.customerInfo.lastOrderReorderLink) {
+                customerData.get('reorder-banner').subscribe(function(data) {
+                      this.customerInfo = data;
+                      this._initReorderBanner();
+                }.bind(this));
+       
+                return
+            }
+       
+            $('.page-wrapper').prepend(
+                mageTemplate(modalTemplate)({
+                    data: this._prepareBannerData(),
+                })
+            );
+
+            this.$reorderBanner = $('.cs-reorder-banner');
+
+            this._handleInitialShow();
+            this._attachEvents();
+       },
+    
         /**
          * When the banner is about to be shown for the first time in a current session
          * show banner with delay and with a sliding animation to catch user's attention.

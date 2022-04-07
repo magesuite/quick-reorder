@@ -4,12 +4,13 @@
     <body>
         <referenceContainer name="main.content">
             <referenceContainer name="page.main.container.inner">
-                <block class="Creativestyle\QuickReorder\Block\LatestProductsPurchased" name="customer.latest.products.purchased">
+                <block class="MageSuite\QuickReorder\Block\LatestProductsPurchased" name="customer.latest.products.purchased">
                     <action method="setTemplate">
                         <argument name="template" xsi:type="string">MageSuite_QuickReorder::latest-products-purchased.phtml</argument>
                     </action>
                     <arguments>
                         <argument xsi:type="string" name="headline_text" translate="true">Recently ordered products</argument>
+                        <argument xsi:type="boolean" name="cache_lifetime">false</argument>
                     </arguments>
                 </block>
             </referenceContainer>

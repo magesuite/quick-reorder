@@ -89,9 +89,9 @@ class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\Lates
             ->addPriceData()
             ->addTaxPercents()
             ->addStoreFilter()
+            ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH)
             ->addUrlRewrite()
-            ->addMediaGalleryData()
-            ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH);
+            ->addMediaGalleryData();
 
         return $this->sortProducts($productsCollection->getItems(), $productIds);
     }

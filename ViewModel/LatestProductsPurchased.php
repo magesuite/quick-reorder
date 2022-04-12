@@ -86,10 +86,11 @@ class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\Lates
         $productsCollection = $this->productCollectionFactory->create()
             ->addIdFilter($productIds)
             ->addAttributeToSelect($this->catalogConfig->getProductAttributes())
+            ->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
+            ->addAttributeToFilter('visibility', ['neq' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE])
             ->addPriceData()
             ->addTaxPercents()
             ->addStoreFilter()
-            ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH)
             ->addUrlRewrite()
             ->addMediaGalleryData();
 

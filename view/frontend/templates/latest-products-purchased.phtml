@@ -39,6 +39,7 @@ $headlineText = $block->getHeadlineText();
                                 ->createBlock(\MageSuite\ThemeHelpers\Block\Icon::class)
                                 ->setIconUrl($block->getVar('product_carousel/navigation/arrows/prev/path'))
                                 ->setCssClass("cs-products-carousel__nav-icon")
+                                ->setAltText(__("Previous"))
                                 ->setInlined(true)
                                 ->toHtml();
                             ?>
@@ -50,6 +51,7 @@ $headlineText = $block->getHeadlineText();
                                 ->createBlock(\MageSuite\ThemeHelpers\Block\Icon::class)
                                 ->setIconUrl($block->getVar('product_carousel/navigation/arrows/next/path'))
                                 ->setCssClass("cs-products-carousel__nav-icon")
+                                ->setAltText(__("Next"))
                                 ->setInlined(true)
                                 ->toHtml();
                             ?>

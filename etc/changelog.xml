@@ -1,0 +1,21 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:MageSuite_Changelog:etc/changelog.xsd">
+    <module
+        id="MageSuite_QuickReorder"
+        name="MageSuite_QuickReorder">
+        <changelog>
+            <tag version="1.0.0" date="2021-03-04">
+                <entry>
+                    <type>INIT</type>
+                    <overview>Initial release</overview>
+                    <description></description>
+                </entry>
+            </tag>
+            <tag version="1.3.12" date="2022-07-06">
+                <entry>
+                    <type>PERFORMANCE</type>
+                    <overview>[IPET-1158] Avoid heavy SQL query if ordered items do not exist</overview>
+                </entry>
+            </tag>
+        </changelog>
+    </module>
+</config>

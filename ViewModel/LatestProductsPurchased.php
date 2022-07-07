@@ -66,6 +66,7 @@ class LatestProductsPurchased implements \MageSuite\QuickReorder\ViewModel\Lates
         }
         if ($this->products === null) {
             $orderItems = $this->getCustomerLatestOrderItems();
+            $this->products = [];
 
             if (!empty($orderItems)) {
                 $this->products = $this->getSortedProductsFromOrderItems($orderItems);

@@ -16,6 +16,13 @@
                     <overview>[IPET-1158] Avoid heavy SQL query if ordered items do not exist</overview>
                 </entry>
             </tag>
+            <tag version="1.3.13" date="2022-07-07">
+                <entry>
+                    <type>FIX</type>
+                    <overview>Fix integration tests</overview>
+                    <ticket_id>IPET-1158</ticket_id>
+                </entry>
+            </tag>
         </changelog>
     </module>
 </config>

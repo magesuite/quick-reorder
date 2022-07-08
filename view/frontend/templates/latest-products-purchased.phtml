@@ -1,16 +1,19 @@
 <?php
-/** @var \MageSuite\QuickReorder\ViewModel\LatestProductsPurchased $viewModel */
+/**
+ * @var \MageSuite\QuickReorder\Block\LatestProductsPurchased $block 
+ * @var \MageSuite\QuickReorder\ViewModel\LatestProductsPurchased $viewModel 
+ */
 $viewModel = $block->getViewModel();
 $headlineText = $block->getHeadlineText();
 ?>
 <?php if ($viewModel->isEnabled() && ($products = $viewModel->getProducts())) : ?>
     <?php
-        // Build JS config
-        $jsSettings = $block->getVar('product_carousel/js');
-        if (empty($jsSettings)) {
-            $jsSettings = [];
-        }
-        $jsSettings['itemsCount'] = count($products);
+    // Build JS config
+    $jsSettings = $block->getVar('product_carousel/js');
+    if (empty($jsSettings)) {
+        $jsSettings = [];
+    }
+    $jsSettings['itemsCount'] = count($products);
     ?>
     <?= /* @noEscape */ $block->getCssOnce('css/products-carousel.css'); ?>
     <div class="cs-container cs-container--latest-purchased-products cs-latest-purchased-products">
@@ -19,19 +22,19 @@ $headlineText = $block->getHeadlineText();
         </div>
         <div class="cs-container cs-container--products-carousel">
             <div class="cs-container__inner">
-                <div class="cs-products-carousel" data-view-mode="grid" data-mage-init='{"ccProductsCarousel": <?= /* @noEscape */  json_encode($jsSettings) ?> }'>
+                <div class="cs-products-carousel" data-view-mode="grid" data-mage-init='{"ccProductsCarousel": <?= /* @noEscape */ json_encode($jsSettings) ?> }'>
                     <div class="cs-products-carousel__slides-wrapper">
-                        <?php if ($block->getVar('product_carousel/navigation/show')): ?>
-                        <button class="cs-products-carousel__nav cs-products-carousel__nav--prev cs-slider-navigation cs-slider-navigation--prev <?= $block->getVar('product_carousel/navigation/arrows/prev/additional_css_classes') ?>" disabled type="button">
-                            <?= $this->getLayout()
-                                ->createBlock('MageSuite\ThemeHelpers\Block\Icon')
-                                ->setIconUrl($block->getVar('product_carousel/navigation/arrows/prev/path'))
-                                ->setCssClass('cs-slider-navigation__icon')
-                                ->setAltText(__('Previous slide(s)'))
-                                ->setInlined(true)
-                                ->toHtml();
-                            ?>
-                        </button>
+                        <?php if ($block->getVar('product_carousel/navigation/show')) : ?>
+                            <button class="cs-products-carousel__nav cs-products-carousel__nav--prev cs-slider-navigation cs-slider-navigation--prev <?= /* @noEscape */ $block->getVar('product_carousel/navigation/arrows/prev/additional_css_classes') ?>" disabled type="button">
+                                <?= /* @noEscape */  $block->getLayout()
+                                    ->createBlock(\MageSuite\ThemeHelpers\Block\Icon::class)
+                                    ->setIconUrl($block->getVar('product_carousel/navigation/arrows/prev/path'))
+                                    ->setCssClass('cs-slider-navigation__icon')
+                                    ->setAltText(__('Previous slide(s)'))
+                                    ->setInlined(true)
+                                    ->toHtml();
+                                ?>
+                            </button>
                         <?php endif; ?>
                         <ul class="cs-products-carousel__slides">
                             <?php foreach ($products as $product) : ?>
@@ -46,10 +49,10 @@ $headlineText = $block->getHeadlineText();
                                 </li>
                             <?php endforeach; ?>
                         </ul>
-                        <?php if ($block->getVar('product_carousel/navigation/show')): ?>
-                            <button class="cs-products-carousel__nav cs-products-carousel__nav--next cs-slider-navigation cs-slider-navigation--next <?= $block->getVar('product_carousel/navigation/arrows/next/additional_css_classes') ?>" type="button">
-                                <?= $this->getLayout()
-                                    ->createBlock('MageSuite\ThemeHelpers\Block\Icon')
+                        <?php if ($block->getVar('product_carousel/navigation/show')) : ?>
+                            <button class="cs-products-carousel__nav cs-products-carousel__nav--next cs-slider-navigation cs-slider-navigation--next <?= /* @noEscape */ $block->getVar('product_carousel/navigation/arrows/next/additional_css_classes') ?>" type="button">
+                                <?= /* @noEscape */  $block->getLayout()
+                                    ->createBlock(\MageSuite\ThemeHelpers\Block\Icon::class)
                                     ->setIconUrl($block->getVar('product_carousel/navigation/arrows/next/path'))
                                     ->setCssClass('cs-slider-navigation__icon')
                                     ->setAltText(__('Next slide(s)'))
@@ -59,8 +62,8 @@ $headlineText = $block->getHeadlineText();
                             </button>
                         <?php endif; ?>
                     </div>
-                    <?php if ($block->getVar('product_carousel/js/usePagination')): ?>
-                        <div class="cs-slider-pagination cs-products-carousel__pagination <?= $block->getVar('product_carousel/pagination/additional_css_classes') ?>"></div>
+                    <?php if ($block->getVar('product_carousel/js/usePagination')) : ?>
+                        <div class="cs-slider-pagination cs-products-carousel__pagination <?= /* @noEscape */ $block->getVar('product_carousel/pagination/additional_css_classes') ?>"></div>
                     <?php endif; ?>
                 </div>
             </div>

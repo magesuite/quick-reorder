@@ -17,6 +17,13 @@
                     <ticket_id>IPET-1158</ticket_id>
                 </entry>
             </tag>
+            <tag version="2.0.3" date="2022-07-27">
+                <entry>
+                    <type>FIX</type>
+                    <overview>Adjust latest products purchased template to use proper configuration settings</overview>
+                    <ticket_id>P2G-1948</ticket_id>
+                </entry>
+            </tag>
         </changelog>
     </module>
 </config>

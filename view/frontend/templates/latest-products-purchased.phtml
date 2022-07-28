@@ -13,7 +13,10 @@ $headlineText = $block->getHeadlineText();
     if (empty($jsSettings)) {
         $jsSettings = [];
     }
+    $jsSettings['usePagination'] = filter_var($block->getVar('product_carousel/js/usePagination'), FILTER_VALIDATE_BOOL);
     $jsSettings['itemsCount'] = count($products);
+    $jsSettings['columnsConfig'] = $block->getVar('columns/one-column', 'MageSuite_ContentConstructor');
+    $jsSettings['componentType'] = 'products_carousel';
     ?>
     <?= /* @noEscape */ $block->getCssOnce('css/products-carousel.css'); ?>
     <div class="cs-container cs-container--latest-purchased-products cs-latest-purchased-products">

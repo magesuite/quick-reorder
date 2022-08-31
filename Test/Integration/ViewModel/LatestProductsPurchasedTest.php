@@ -30,6 +30,7 @@ class LatestProductsPurchasedTest extends \PHPUnit\Framework\TestCase
         $this->customerSession = $this->objectManager->get(\Magento\Customer\Model\Session::class);
         $this->customer = $this->objectManager->get(\Magento\Customer\Model\Customer::class);
         $this->latestProductsPurchased = $this->objectManager->get(\MageSuite\QuickReorder\ViewModel\LatestProductsPurchasedInterface::class);
+        $this->reindexPrices();
     }
 
     /**
@@ -128,5 +129,18 @@ class LatestProductsPurchasedTest extends \PHPUnit\Framework\TestCase
     protected function getCustomer()
     {
         return $this->customer->load(1);
+    }
+
+    protected function reindexPrices()
+    {
+        $productsIds = $this->objectManager->create(\Magento\Catalog\Model\ResourceModel\Product\Collection::class)
+            ->getAllIds();
+
+        if(empty($productsIds)) {
+            return;
+        }
+
+        $priceIndexer = $this->objectManager->get(\Magento\Catalog\Model\Indexer\Product\Price::class);
+        $priceIndexer->execute($productsIds);
     }
 }

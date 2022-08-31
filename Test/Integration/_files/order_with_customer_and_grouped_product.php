@@ -40,6 +40,7 @@ $payment->setMethod('checkmo')
     );
 
 $product = $objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class)->get('simple_11');
+
 $groupedProduct = $objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class)->get('grouped');
 
 $productOptions = [

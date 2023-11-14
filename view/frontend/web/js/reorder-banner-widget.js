@@ -47,10 +47,10 @@ define([
                       this.customerInfo = data;
                       this._initReorderBanner();
                 }.bind(this));
-       
+
                 return
             }
-       
+
             $('.page-wrapper').prepend(
                 mageTemplate(modalTemplate)({
                     data: this._prepareBannerData(),
@@ -62,7 +62,7 @@ define([
             this._handleInitialShow();
             this._attachEvents();
        },
-    
+
         /**
          * When the banner is about to be shown for the first time in a current session
          * show banner with delay and with a sliding animation to catch user's attention.

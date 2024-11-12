@@ -1,37 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace MageSuite\QuickReorder\CustomerData;
 
 class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInterface
 {
-    /**
-     * @var \Magento\Framework\UrlInterface
-     */
-    protected $urlBuilder;
-
-    /**
-     * @var \Magento\Framework\Pricing\PriceCurrencyInterface
-     */
-    protected $priceCurrency;
-
-    /**
-     * @var \Magento\Sales\Helper\Reorder
-     */
-    protected $reorderHelper;
-
-    /**
-     * @var \MageSuite\QuickReorder\Helper\Configuration
-     */
-    protected $configuration;
-
-    /**
-     * @var \Magento\Customer\Model\Session
-     */
-    protected $customerSession;
-
-    /**
-     * @var MageSuite\QuickReorder\Model\Customer\GetLastOrderByCustomerId
-     */
-    protected $getLastOrderByCustomerId;
+    protected \Magento\Framework\UrlInterface $urlBuilder;
+    protected \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency;
+    protected \Magento\Sales\Helper\Reorder $reorderHelper;
+    protected \MageSuite\QuickReorder\Helper\Configuration $configuration;
+    protected \Magento\Customer\Model\Session $customerSession;
+    protected \MageSuite\QuickReorder\Model\Customer\GetLastOrderByCustomerId $getLastOrderByCustomerId;
 
     public function __construct(
         \Magento\Framework\UrlInterface $urlBuilder,
@@ -75,7 +55,7 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
 
         return [
             'firstname' => $customer->getFirstname(),
-            'lastOrderAmount' => $this->priceCurrency->convertAndFormat($lastOrder->getBaseGrandTotal(), false),
+            'lastOrderAmount' => $this->priceCurrency->convertAndFormat($lastOrder->getGrandTotal(), false),
             'lastOrderItemsCount' => (int)$lastOrder->getTotalQtyOrdered(),
             'lastOrderItems' => $this->prepareOrderItems($lastOrder),
             'lastOrderReorderLink' => $this->urlBuilder->getUrl('sales/order/reorder', ['order_id' => $lastOrder->getId()]),
@@ -83,7 +63,7 @@ class ReorderBanner implements \Magento\Customer\CustomerData\SectionSourceInter
         ];
     }
 
-    public function prepareOrderItems(\Magento\Sales\Api\Data\OrderInterface $order)
+    public function prepareOrderItems(\Magento\Sales\Api\Data\OrderInterface $order): array
     {
         return array_values(
             array_filter(

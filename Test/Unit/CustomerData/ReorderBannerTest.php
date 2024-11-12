@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace MageSuite\QuickReorder\Test\Unit\CustomerData;
 
 class ReorderBannerTest extends \PHPUnit\Framework\TestCase
@@ -72,7 +75,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $this->orderStub = $this->getMockBuilder(\Magento\Sales\Model\Order::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getBaseGrandTotal', 'getTotalQtyOrdered', 'getItems'])
+            ->setMethods(['getId', 'getGrandTotal', 'getTotalQtyOrdered', 'getItems'])
             ->getMock();
 
         $this->customerSessionStub->expects($this->any())
@@ -90,7 +93,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testGetSectionDataForDisabledReorder()
+    public function testGetSectionDataForDisabledReorder(): void
     {
         $expectedResult = [];
 
@@ -101,7 +104,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, $this->reorderBannerDataSection->getSectionData());
     }
 
-    public function testGetSectionDataForNotLoggedIn()
+    public function testGetSectionDataForNotLoggedIn(): void
     {
         $expectedResult = [];
 
@@ -120,7 +123,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, $this->reorderBannerDataSection->getSectionData());
     }
 
-    public function testGetSectionDataWithoutLastOrder()
+    public function testGetSectionDataWithoutLastOrder(): void
     {
         $expectedResult = [];
 
@@ -143,7 +146,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult, $this->reorderBannerDataSection->getSectionData());
     }
 
-    public function testGetSectionData()
+    public function testGetSectionData(): void
     {
         $expectedResult = [
             'firstname' => 'John',
@@ -188,7 +191,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
             ->willReturn('John');
 
         $this->orderStub->expects($this->once())
-            ->method('getBaseGrandTotal')
+            ->method('getGrandTotal')
             ->willReturn('34.54');
 
         $this->orderStub->expects($this->once())

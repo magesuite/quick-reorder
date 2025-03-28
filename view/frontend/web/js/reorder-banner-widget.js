@@ -176,7 +176,7 @@ define([
                         name = name.substring(0, $widget.options.maxProductNameLength) + '...';
                     }
 
-                    return '<span>' + name + '<span class="cs-reorder-banner__item-count">' + value.count + 'x</span><span><br>';
+                    return '<span>' + name + '<span class="cs-reorder-banner__item-count">' + value.count + 'x</span></span><br>';
                 } else if (index === 2) {
                     return $widget.options.listSubheadlineText.replace(
                             '%qty',

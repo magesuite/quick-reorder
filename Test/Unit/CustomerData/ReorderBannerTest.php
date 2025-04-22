@@ -49,33 +49,35 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\ObjectManager::getInstance();
-
+        $allowedMethodName = method_exists(\PHPUnit\Framework\MockObject\MockBuilder::class, 'onlyMethods')
+            ? 'onlyMethods'
+            : 'setMethods';
         $this->reorderHelperStub = $this->getMockBuilder(\Magento\Sales\Helper\Reorder::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isAllowed'])
+            ->$allowedMethodName(['isAllowed'])
             ->getMock();
 
         $this->configurationStub = $this->getMockBuilder(\MageSuite\QuickReorder\Helper\Configuration::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isReorderBannerEnabled'])
+            ->$allowedMethodName(['isReorderBannerEnabled'])
             ->getMock();
 
         $this->customerSessionStub = $this->getMockBuilder(\Magento\Customer\Model\Session::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isLoggedIn', 'getCustomer'])
+            ->$allowedMethodName(['isLoggedIn', 'getCustomer'])
             ->getMock();
         $this->getLastOrderByCustomerIdStub = $this->getMockBuilder(\MageSuite\QuickReorder\Model\Customer\GetLastOrderByCustomerId::class)
             ->disableOriginalConstructor()
-            ->setMethods(['execute'])
+            ->$allowedMethodName(['execute'])
             ->getMock();
 
         $this->customerStub = $this->getMockBuilder(\Magento\Customer\Model\Customer::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getFirstname'])
+            ->$allowedMethodName(['getId'])
             ->getMock();
         $this->orderStub = $this->getMockBuilder(\Magento\Sales\Model\Order::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getGrandTotal', 'getTotalQtyOrdered', 'getItems'])
+            ->$allowedMethodName(['getId', 'getGrandTotal', 'getTotalQtyOrdered', 'getItems'])
             ->getMock();
 
         $this->customerSessionStub->expects($this->any())
@@ -186,9 +188,7 @@ class ReorderBannerTest extends \PHPUnit\Framework\TestCase
             ->method('getId')
             ->willReturn(1);
 
-        $this->customerStub->expects($this->once())
-            ->method('getFirstname')
-            ->willReturn('John');
+        $this->customerStub->setData('firstname', 'John');
 
         $this->orderStub->expects($this->once())
             ->method('getGrandTotal')
